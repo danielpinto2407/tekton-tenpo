@@ -9,11 +9,12 @@ import org.springframework.stereotype.Component;
 public class CalculationResponseMapper {
 
     public CalculationResponse toResponse(CalculationResult result) {
-        return CalculationResponse.builder()
-                .num1(result.getNum1())
-                .num2(result.getNum2())
-                .percentage(result.getPercentage())
-                .result(result.getResult())
-                .build();
+        return new CalculationResponse(
+                result.num1(),
+                result.num2(),
+                result.percentage(),
+                result.result()
+        );
     }
 }
+

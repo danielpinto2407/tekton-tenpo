@@ -12,16 +12,35 @@ import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationReq
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationResponse;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.mapper.CalculationResponseMapper;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/calculations")
+@RequestMapping("/api/v1/calculos")
 @RequiredArgsConstructor
+@Tag(name = "Calculos", description = "Operaciones para calculo de porcentaje")
 public class CalculationController {
 
     private final CalculateUseCase calculateUseCase;
     private final CalculationResponseMapper responseMapper;
 
+    @Operation(
+        summary = "Calcula la suma de los dos numeros y les aplica el porcentaje obtenido de la api externa",
+        description = "Recibe dos números, los suma y les aplica un porcentaje obtenido de un servicio externo.",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Calculo completado exitosamente",
+                content = @Content(schema = @Schema(implementation = CalculationResponse.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+        }
+    )
     @PostMapping
     public ResponseEntity<CalculationResponse> calculate(@RequestBody CalculationRequest request) {
         CalculationResult result = calculateUseCase.calculate(request.getNum1(), request.getNum2());
