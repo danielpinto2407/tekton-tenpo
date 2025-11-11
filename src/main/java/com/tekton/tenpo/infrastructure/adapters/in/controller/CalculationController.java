@@ -43,7 +43,7 @@ public class CalculationController {
     )
     @PostMapping
     public ResponseEntity<CalculationResponse> calculate(@RequestBody CalculationRequest request) {
-        CalculationResult result = calculateUseCase.calculate(request.getNum1(), request.getNum2());
+        CalculationResult result = calculateUseCase.calculate(request.num1(), request.num2());
         return ResponseEntity.ok(responseMapper.toResponse(result));
     }
 }
