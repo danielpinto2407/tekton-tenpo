@@ -1,0 +1,3 @@
+spring:
+  testcontainers:
+    enabled: true
