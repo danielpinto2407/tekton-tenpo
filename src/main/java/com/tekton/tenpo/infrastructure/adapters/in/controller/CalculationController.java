@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tekton.tenpo.application.port.in.CalculateUseCase;
-import com.tekton.tenpo.domain.model.CalculationResult;
+import com.tekton.tenpo.application.port.in.CalculatePercentageUseCase;
+import com.tekton.tenpo.domain.model.CalculationPercentageResult;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationRequest;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationResponse;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.mapper.CalculationResponseMapper;
@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Calculos", description = "Operaciones para calculo de porcentaje")
 public class CalculationController {
 
-    private final CalculateUseCase calculateUseCase;
+    private final CalculatePercentageUseCase calculateUseCase;
     private final CalculationResponseMapper responseMapper;
 
     @Operation(
@@ -42,8 +43,8 @@ public class CalculationController {
         }
     )
     @PostMapping
-    public ResponseEntity<CalculationResponse> calculate(@RequestBody CalculationRequest request) {
-        CalculationResult result = calculateUseCase.calculate(request.num1(), request.num2());
+    public ResponseEntity<CalculationResponse> calculate(@RequestBody @Valid CalculationRequest request) {
+        CalculationPercentageResult result = calculateUseCase.calculate(request.num1(), request.num2());
         return ResponseEntity.ok(responseMapper.toResponse(result));
     }
 }
