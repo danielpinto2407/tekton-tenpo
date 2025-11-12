@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.tekton.tenpo.application.port.in.SaveCallPort;
 import com.tekton.tenpo.application.port.out.CallHistoryRepositoryPort;
 import com.tekton.tenpo.domain.model.CallHistory;
-import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CreateCallHistoryRequest;
+import com.tekton.tenpo.domain.model.CreateCallHistoryInterceptor;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +18,7 @@ public class SaveCallUseCase implements SaveCallPort {
 
     private final CallHistoryRepositoryPort repository;
 
-    public CallHistory saveCallHistory(CreateCallHistoryRequest request) {
+    public CallHistory saveCallHistory(CreateCallHistoryInterceptor request) {
         return save(request.toEntity());
     }
 

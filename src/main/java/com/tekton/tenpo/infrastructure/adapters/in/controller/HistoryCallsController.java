@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.tekton.tenpo.application.port.in.GetAllHistoryCallsPort;
 import com.tekton.tenpo.application.usecase.GetAllHistoryCallsUseCase;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CallHistoryDto;
 
@@ -19,7 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Historial de Llamadas", description = "Operaciones para consultar y registrar el historial de llamadas")
 public class HistoryCallsController {
 
-    private final GetAllHistoryCallsUseCase getCallHistoryUseCase;
+    private final GetAllHistoryCallsPort getCallHistoryUseCase;
 
     @GetMapping
     @Operation(
