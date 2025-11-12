@@ -1,10 +1,11 @@
-package com.tekton.tenpo.infrastructure.config.webclient;   
+package com.tekton.tenpo.infrastructure.adapters.in.config.webclient;   
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.tekton.tenpo.infrastructure.config.PercentageApiProperties;
+import com.tekton.tenpo.infrastructure.adapters.in.config.PercentageApiProperties;
+
 
 @Configuration
 public class WebClientConfig {

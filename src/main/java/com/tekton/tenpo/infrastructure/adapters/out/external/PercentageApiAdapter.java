@@ -3,9 +3,9 @@ package com.tekton.tenpo.infrastructure.adapters.out.external;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.tekton.tenpo.application.port.out.ExternalPercentagePort;
+import com.tekton.tenpo.infrastructure.adapters.in.config.PercentageApiProperties;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.exception.ExternalServiceException;
 import com.tekton.tenpo.infrastructure.adapters.out.external.dto.RandomResponse;
-import com.tekton.tenpo.infrastructure.config.PercentageApiProperties;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.tekton.tenpo.infrastructure.config.openapi;
+package com.tekton.tenpo.infrastructure.adapters.in.config.openapi;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

@@ -1,4 +1,4 @@
-package com.tekton.tenpo.infrastructure.config;
+package com.tekton.tenpo.infrastructure.adapters.in.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
