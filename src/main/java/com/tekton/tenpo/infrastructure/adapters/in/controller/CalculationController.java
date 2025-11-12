@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tekton.tenpo.application.port.in.CalculatePercentageUseCase;
+import com.tekton.tenpo.application.port.in.CalculatePercentagePort;
 import com.tekton.tenpo.domain.model.CalculationPercentageResult;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationRequest;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationResponse;
@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Calculos", description = "Operaciones para calculo de porcentaje")
 public class CalculationController {
 
-    private final CalculatePercentageUseCase calculateUseCase;
+    private final CalculatePercentagePort calculateUseCase;
     private final CalculationResponseMapper responseMapper;
 
     @Operation(

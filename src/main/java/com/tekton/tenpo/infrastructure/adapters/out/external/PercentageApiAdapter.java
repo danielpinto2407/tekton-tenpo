@@ -2,7 +2,7 @@ package com.tekton.tenpo.infrastructure.adapters.out.external;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.tekton.tenpo.application.port.out.PercentagePort;
+import com.tekton.tenpo.application.port.out.ExternalPercentagePort;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.exception.ExternalServiceException;
 import com.tekton.tenpo.infrastructure.adapters.out.external.dto.RandomResponse;
 import com.tekton.tenpo.infrastructure.config.PercentageApiProperties;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PercentageApiAdapter implements PercentagePort {
+public class PercentageApiAdapter implements ExternalPercentagePort {
 
     private static final String CACHE_KEY = "lastPercentage";
 
@@ -35,11 +35,7 @@ public class PercentageApiAdapter implements PercentagePort {
             .expireAfterWrite(Duration.ofMinutes(30))
             .maximumSize(1)
             .build();
-
-    /**
-     * Obtiene un porcentaje desde un servicio externo. 
-     * Si falla, usa el último valor en caché.
-     */
+            
     @Override
     @CircuitBreaker(name = "percentageApi", fallbackMethod = "fallbackPercentage")
     public double getPercentage() {

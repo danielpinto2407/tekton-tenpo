@@ -2,18 +2,17 @@ package com.tekton.tenpo.application.usecase;
 
 import org.springframework.stereotype.Service;
 
-import com.tekton.tenpo.application.port.in.CalculatePercentageUseCase;
-import com.tekton.tenpo.application.port.out.PercentagePort;
+import com.tekton.tenpo.application.port.in.CalculatePercentagePort;
+import com.tekton.tenpo.application.port.out.ExternalPercentagePort;
 import com.tekton.tenpo.domain.model.CalculationPercentageResult;
-import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CalculatePercentageService implements CalculatePercentageUseCase {
+public class CalculatePercentageUseCase implements CalculatePercentagePort {
 
-    private final PercentagePort percentagePort;
+    private final ExternalPercentagePort percentagePort;
 
     @Override
     public CalculationPercentageResult calculate(double num1, double num2) {

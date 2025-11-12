@@ -8,7 +8,8 @@ public record CalculationPercentageResult(
 ) {
 
     public static CalculationPercentageResult of(double num1, double num2, double percentage) {
-        double result = (num1 + num2) * (percentage / 100);
+        double suma = num1 + num2;
+        double result = suma + (suma * (percentage / 100));
         return new CalculationPercentageResult(num1, num2, percentage, result);
     }
 }

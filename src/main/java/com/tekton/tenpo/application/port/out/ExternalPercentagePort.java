@@ -1,6 +1,6 @@
 package com.tekton.tenpo.application.port.out;
 
-public interface PercentagePort {
+public interface ExternalPercentagePort {
     double getPercentage();
 }
 
