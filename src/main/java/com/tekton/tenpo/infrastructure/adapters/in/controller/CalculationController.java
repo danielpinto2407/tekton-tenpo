@@ -11,6 +11,7 @@ import com.tekton.tenpo.domain.model.CalculationPercentageResult;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationRequest;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationResponse;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.mapper.CalculationResponseMapper;
+import com.tekton.tenpo.infrastructure.constants.ApiConstants;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,7 +22,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/calculos")
+@RequestMapping(ApiConstants.CALCULOS_API_PATH)
 @RequiredArgsConstructor
 @Tag(name = "Calculos", description = "Operaciones para calculo de porcentaje")
 public class CalculationController {

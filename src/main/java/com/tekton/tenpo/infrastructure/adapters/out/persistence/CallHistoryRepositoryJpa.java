@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.tekton.tenpo.application.port.out.CallHistoryRepositoryPort;
 import com.tekton.tenpo.domain.model.CallHistory;
+import com.tekton.tenpo.infrastructure.constants.AdapterConstants;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +20,7 @@ public class CallHistoryRepositoryJpa implements CallHistoryRepositoryPort {
 
     private final SpringDataCallHistoryRepository repo;
 
-    @Async("historyExecutor")
+    @Async(AdapterConstants.ASYNC_BEAN_NAME)
     @Override
     public void save(CallHistory callHistory) {
         log.info("[Async Save] Guardando historial en hilo: {}", Thread.currentThread().getName());

@@ -5,6 +5,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.tekton.tenpo.infrastructure.adapters.in.interceptor.CallHistoryInterceptor;
+import com.tekton.tenpo.infrastructure.constants.ApiConstants;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(callHistoryInterceptor)
-                .addPathPatterns("/api/v1/calculos") // solo esa ruta exacta
+                .addPathPatterns(ApiConstants.CALCULOS_API_PATH)
                 .excludePathPatterns(
                     "/swagger-ui/**",
                     "/v3/api-docs/**",

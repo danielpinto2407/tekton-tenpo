@@ -6,6 +6,7 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import com.tekton.tenpo.application.port.in.SaveCallPort;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CreateCallHistoryRequest;
+import com.tekton.tenpo.infrastructure.constants.ApiConstants;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +29,7 @@ public class CallHistoryInterceptor implements HandlerInterceptor {
         try {
             String endpoint = request.getRequestURI();
             String params = getRequestBody(request);
-            String message = ex != null ? ex.getMessage() : "success";
+            String message = ex != null ? ex.getMessage() : ApiConstants.SUCCESS;
             int statusCode = ex != null ? 500 : response.getStatus();
 
             CreateCallHistoryRequest dto = new CreateCallHistoryRequest(endpoint, params, message, statusCode);
@@ -50,6 +51,6 @@ public class CallHistoryInterceptor implements HandlerInterceptor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return request.getQueryString() != null ? request.getQueryString() : "{}";
+        return request.getQueryString() != null ? request.getQueryString() : ApiConstants.EMPTY_BODY_RESPONSE;
     }
 }

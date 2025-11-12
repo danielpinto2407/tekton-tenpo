@@ -6,6 +6,7 @@ import com.tekton.tenpo.application.port.out.ExternalPercentagePort;
 import com.tekton.tenpo.infrastructure.adapters.in.config.PercentageApiProperties;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.exception.ExternalServiceException;
 import com.tekton.tenpo.infrastructure.adapters.out.external.dto.RandomResponse;
+import com.tekton.tenpo.infrastructure.constants.ApiConstants;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PercentageApiAdapter implements ExternalPercentagePort {
 
-    private static final String CACHE_KEY = "lastPercentage";
-
     private final WebClient.Builder webClientBuilder;
     private final PercentageApiProperties properties;
 
@@ -37,7 +36,8 @@ public class PercentageApiAdapter implements ExternalPercentagePort {
             .build();
             
     @Override
-    @CircuitBreaker(name = "percentageApi", fallbackMethod = "fallbackPercentage")
+    @CircuitBreaker(name = ApiConstants.CIRCUIT_BREAKER_NAME, 
+                    fallbackMethod = ApiConstants.FALLBACK_METHOD)
     public double getPercentage() {
         log.info("Fetching percentage from external API...");
 
@@ -51,16 +51,16 @@ public class PercentageApiAdapter implements ExternalPercentagePort {
                 .map(response -> {
                     if (response == null || response.random() == null) {
                         log.error("Invalid response from external API: {}", response);
-                        throw new ExternalServiceException("Respuesta inválida del servicio externo.");
+                        throw new ExternalServiceException(ApiConstants.EXTERNAL_INVALID_RESPONSE_EXCEPTION);
                     }
                     double percentage = response.random();
-                    cache.put(CACHE_KEY, percentage);
+                    cache.put(ApiConstants.CACHE_KEY, percentage);
                     log.info("Fetched and cached new percentage: {}", percentage);
                     return percentage;
                 })
-                .doOnError(e -> log.error("Error fetching percentage: {}", e.getMessage()))
+                .doOnError(e -> log.error(ApiConstants.ERROR_FETCHING_PERCENTAGE, e.getMessage()))
                 .blockOptional(Duration.ofSeconds(3))
-                .orElseThrow(() -> new ExternalServiceException("No se pudo obtener el porcentaje externo."));
+                .orElseThrow(() -> new ExternalServiceException(ApiConstants.EXTERNAL_SERVICE_EXCEPTION));
     }
 
     /**
@@ -69,8 +69,8 @@ public class PercentageApiAdapter implements ExternalPercentagePort {
      */
     private double fallbackPercentage(Throwable ex) {
         log.warn("Fallback triggered due to error: {}", ex.getMessage());
-        return Optional.ofNullable(cache.getIfPresent(CACHE_KEY))
-                .orElseThrow(() -> new ExternalServiceException("Servicio externo no disponible y no hay porcentaje en caché."));
+        return Optional.ofNullable(cache.getIfPresent(ApiConstants.CACHE_KEY))
+                .orElseThrow(() -> new ExternalServiceException(ApiConstants.FALLBACK_MESSAGE));
     }
     
 }
