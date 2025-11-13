@@ -128,4 +128,106 @@ class PercentageApiAdapterTest {
 
         assertEquals(0.0, result);
     }
+
+    @Test
+    void getPercentage_cachesPreviousValue_onSuccess() {
+        RandomResponse response = new RandomResponse("success", 0, 100, 50.0);
+        WebClient webClient = mock(WebClient.class);
+        
+        doReturn(webClientBuilder).when(webClientBuilder).baseUrl(anyString());
+        doReturn(webClient).when(webClientBuilder).build();
+        
+        WebClient.RequestHeadersUriSpec<?> uriSpec = mock(WebClient.RequestHeadersUriSpec.class);
+        doReturn(uriSpec).when(webClient).get();
+        
+        WebClient.RequestHeadersSpec<?> headersSpec = mock(WebClient.RequestHeadersSpec.class);
+        doReturn(headersSpec).when(uriSpec).uri(anyString());
+        
+        WebClient.ResponseSpec responseSpec = mock(WebClient.ResponseSpec.class);
+        doReturn(responseSpec).when(headersSpec).retrieve();
+        
+        Flux<RandomResponse> flux = Flux.just(response);
+        doReturn(flux).when(responseSpec).bodyToFlux(RandomResponse.class);
+
+        double firstCall = adapter.getPercentage();
+        assertEquals(50.0, firstCall);
+        
+        double secondCall = adapter.getPercentage();
+        assertEquals(50.0, secondCall);
+    }
+
+    @Test
+    void getPercentage_returnsValidPercentage_withMaxValue() {
+        RandomResponse response = new RandomResponse("success", 0, 100, 100.0);
+        WebClient webClient = mock(WebClient.class);
+        
+        doReturn(webClientBuilder).when(webClientBuilder).baseUrl(anyString());
+        doReturn(webClient).when(webClientBuilder).build();
+        
+        WebClient.RequestHeadersUriSpec<?> uriSpec = mock(WebClient.RequestHeadersUriSpec.class);
+        doReturn(uriSpec).when(webClient).get();
+        
+        WebClient.RequestHeadersSpec<?> headersSpec = mock(WebClient.RequestHeadersSpec.class);
+        doReturn(headersSpec).when(uriSpec).uri(anyString());
+        
+        WebClient.ResponseSpec responseSpec = mock(WebClient.ResponseSpec.class);
+        doReturn(responseSpec).when(headersSpec).retrieve();
+        
+        Flux<RandomResponse> flux = Flux.just(response);
+        doReturn(flux).when(responseSpec).bodyToFlux(RandomResponse.class);
+
+        double result = adapter.getPercentage();
+
+        assertEquals(100.0, result);
+    }
+
+    @Test
+    void getPercentage_throwsExternalServiceException_onWebClientError() {
+        WebClient webClient = mock(WebClient.class);
+        
+        doReturn(webClientBuilder).when(webClientBuilder).baseUrl(anyString());
+        doReturn(webClient).when(webClientBuilder).build();
+        
+        WebClient.RequestHeadersUriSpec<?> uriSpec = mock(WebClient.RequestHeadersUriSpec.class);
+        doReturn(uriSpec).when(webClient).get();
+        
+        WebClient.RequestHeadersSpec<?> headersSpec = mock(WebClient.RequestHeadersSpec.class);
+        doReturn(headersSpec).when(uriSpec).uri(anyString());
+        
+        WebClient.ResponseSpec responseSpec = mock(WebClient.ResponseSpec.class);
+        doReturn(responseSpec).when(headersSpec).retrieve();
+        
+        Flux<RandomResponse> flux = Flux.error(new RuntimeException("Connection timeout"));
+        doReturn(flux).when(responseSpec).bodyToFlux(RandomResponse.class);
+
+        assertThrows(Exception.class, () -> adapter.getPercentage());
+    }
+
+    @Test
+    void getPercentage_returnsCorrectPercentage_withVariousValues() {
+        double[] testValues = {10.5, 25.0, 50.0, 75.5, 99.9};
+
+        for (double testValue : testValues) {
+            RandomResponse response = new RandomResponse("success", 0, 100, testValue);
+            WebClient webClient = mock(WebClient.class);
+            
+            doReturn(webClientBuilder).when(webClientBuilder).baseUrl(anyString());
+            doReturn(webClient).when(webClientBuilder).build();
+            
+            WebClient.RequestHeadersUriSpec<?> uriSpec = mock(WebClient.RequestHeadersUriSpec.class);
+            doReturn(uriSpec).when(webClient).get();
+            
+            WebClient.RequestHeadersSpec<?> headersSpec = mock(WebClient.RequestHeadersSpec.class);
+            doReturn(headersSpec).when(uriSpec).uri(anyString());
+            
+            WebClient.ResponseSpec responseSpec = mock(WebClient.ResponseSpec.class);
+            doReturn(responseSpec).when(headersSpec).retrieve();
+            
+            Flux<RandomResponse> flux = Flux.just(response);
+            doReturn(flux).when(responseSpec).bodyToFlux(RandomResponse.class);
+
+            double result = adapter.getPercentage();
+            assertEquals(testValue, result);
+        }
+    }
 }
