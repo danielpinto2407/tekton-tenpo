@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: tenpo_db
+    environment:
+      POSTGRES_DB: tenpo
+      POSTGRES_USER: tenpo_user
+      POSTGRES_PASSWORD: tenpo_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - tenpo-net
+
+  tenpo-api:
+    build: .
+    container_name: tenpo_api
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tenpo
+      SPRING_DATASOURCE_USERNAME: tenpo_user
+      SPRING_DATASOURCE_PASSWORD: tenpo_pass
+    ports:
+      - "8080:8080"
+    networks:
+      - tenpo-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: tenpo_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@tenpo.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - tenpo-net
+
+networks:
+  tenpo-net:
+    driver: bridge
+
+volumes:
+  pgdata:

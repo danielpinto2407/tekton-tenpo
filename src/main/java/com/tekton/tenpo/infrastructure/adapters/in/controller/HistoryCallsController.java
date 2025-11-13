@@ -1,0 +1,49 @@
+package com.tekton.tenpo.infrastructure.adapters.in.controller;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.tekton.tenpo.application.port.in.GetAllHistoryCallsPort;
+import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CallHistoryDto;
+
+import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@RestController
+@RequestMapping("/api/v1/history")
+@RequiredArgsConstructor
+@Tag(name = "Historial de Llamadas", description = "Operaciones para consultar y registrar el historial de llamadas")
+public class HistoryCallsController {
+
+    private final GetAllHistoryCallsPort getCallHistoryUseCase;
+
+    @GetMapping
+    @Operation(
+        summary = "Obtener historial de llamadas paginado",
+        description = "Devuelve una lista paginada de todas las llamadas registradas en la API. "
+            + "El historial se captura automáticamente mediante un interceptor que registra todos los requests/responses de forma asíncrona. "
+            + "Soporta paginación con page (inicio en 0) y size (cantidad de registros por página).",
+        responses = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "200",
+                description = "Lista paginada de historial obtenida exitosamente"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                responseCode = "500",
+                description = "Error al acceder a la base de datos"
+            )
+        }
+    )
+    public ResponseEntity<Page<CallHistoryDto>> getHistory(
+            @Parameter(description = "Número de página (inicia en 0)", example = "0") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Cantidad de registros por página", example = "10") @RequestParam(defaultValue = "10") int size) {
+        var pageable = PageRequest.of(page, size);
+        var historyPage = getCallHistoryUseCase.getHistory(pageable)
+                .map(CallHistoryDto::fromEntity);
+        return ResponseEntity.ok(historyPage);
+    }
+}
