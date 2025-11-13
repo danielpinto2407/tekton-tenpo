@@ -188,6 +188,36 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <excludes>
+                                        <exclude>com.tekton.tenpo.infrastructure.adapters.in.config.*</exclude>
+                                        <exclude>com.tekton.tenpo.infrastructure.adapters.in.controller.dto</exclude>
+                                        <exclude>com.tekton.tenpo.infrastructure.adapters.in.controller.exception</exclude>
+                                        <exclude>com.tekton.tenpo.infrastructure.adapters.in.filter</exclude>
+                                        <exclude>com.tekton.tenpo.infrastructure.adapters.out.external.dto</exclude>
+                                        <exclude>com.tekton.tenpo.infrastructure.adapters.out.persistence.mapper</exclude>
+                                    </excludes>
+                                </rule>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>com.tekton.tenpo.TenpoApplication</exclude>
+                                        <exclude>com.tekton.tenpo.infrastructure.adapters.out.persistence.CallHistoryEntity\$CallHistoryEntityBuilder</exclude>
+                                        <exclude>com.tekton.tenpo.infrastructure.adapters.in.controller.exception.GlobalExceptionHandler</exclude>
+                                    </excludes>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
