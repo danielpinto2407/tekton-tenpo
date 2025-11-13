@@ -15,5 +15,6 @@ public final class ApiConstants {
     // Controllers
     public static final String CALCULOS_API_PATH = "/api/v1/calculos";
     public static final String EMPTY_BODY_RESPONSE = "{}";
-    public static final String SUCCESS = "success";
+    public static final String SUCCESS = "SUCCESS";
+    public static final String ERROR = "ERROR";
 }

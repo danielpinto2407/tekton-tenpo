@@ -6,7 +6,6 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import com.tekton.tenpo.application.port.in.SaveCallPort;
 import com.tekton.tenpo.domain.model.CreateCallHistoryInterceptor;
-import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CreateCallHistoryRequest;
 import com.tekton.tenpo.infrastructure.constants.ApiConstants;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,32 +21,26 @@ public class CallHistoryInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, 
-                                HttpServletResponse response,
-                                Object handler, 
-                                Exception ex) {
-
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         try {
-            String endpoint = request.getRequestURI();
-            String params = getRequestBody(request);
-            String message = ex != null ? ex.getMessage() : ApiConstants.SUCCESS;
-            int statusCode = ex != null ? 500 : response.getStatus();
+            int statusCode = response.getStatus();
+            String message = ex != null ? ex.getMessage() : 
+            (statusCode >= 400 ? ApiConstants.ERROR : ApiConstants.SUCCESS);
+            String params = extractRequestBody(request);
 
-            CreateCallHistoryInterceptor dto = new CreateCallHistoryInterceptor(endpoint, params, message, statusCode);
-            historyService.saveCallHistory(dto);
-
+            historyService.saveCallHistory(
+                    new CreateCallHistoryInterceptor(request.getRequestURI(), params, message, statusCode)
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private String getRequestBody(HttpServletRequest request) {
+    private String extractRequestBody(HttpServletRequest request) {
         try {
             if (request instanceof ContentCachingRequestWrapper wrapper) {
                 byte[] buf = wrapper.getContentAsByteArray();
-                if (buf.length > 0) {
-                    return new String(buf, wrapper.getCharacterEncoding());
-                }
+                if (buf.length > 0) return new String(buf, wrapper.getCharacterEncoding());
             }
         } catch (Exception e) {
             e.printStackTrace();

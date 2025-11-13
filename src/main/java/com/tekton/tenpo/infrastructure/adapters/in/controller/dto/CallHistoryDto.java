@@ -14,12 +14,12 @@ public record CallHistoryDto(
 ) {
     public static CallHistoryDto fromEntity(CallHistory entity) {
         return new CallHistoryDto(
-                entity.getId(),
-                entity.getTimestamp(),
-                entity.getEndpoint(),
-                entity.getParameters(),
-                entity.getResponse(),
-                entity.getStatusCode()
+                entity.id(),
+                entity.timestamp(),
+                entity.endpoint(),
+                entity.parameters(),
+                entity.response(),
+                entity.statusCode()
         );
     }
 }

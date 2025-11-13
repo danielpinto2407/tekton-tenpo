@@ -2,40 +2,37 @@ package com.tekton.tenpo.domain.model;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-import java.lang.reflect.Field;
 import java.time.Instant;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 
 public class CallHistoryTest {
 
     @Test
-    public void generatedValueStrategyIsIdentity() throws NoSuchFieldException {
-        Field idField = CallHistory.class.getDeclaredField("id");
-        assertNotNull("id field must exist", idField);
+    public void recordConstructorAndAccessorsWork() {
+      
+        Long id = 42L;
+        Instant now = Instant.now();
+        String endpoint = "/api/test";
+        String parameters = "{\"a\":1}";
+        String response = "{\"ok\":true}";
+        Integer statusCode = 200;
 
-        GeneratedValue generatedValue = idField.getAnnotation(GeneratedValue.class);
-        assertNotNull("id field should be annotated with @GeneratedValue", generatedValue);
-        assertEquals("Generation strategy should be IDENTITY", GenerationType.IDENTITY, generatedValue.strategy());
+        CallHistory ch = new CallHistory(id, now, endpoint, parameters, response, statusCode);
+
+        assertEquals(id, ch.id());
+        assertEquals(now, ch.timestamp());
+        assertEquals(endpoint, ch.endpoint());
+        assertEquals(parameters, ch.parameters());
+        assertEquals(response, ch.response());
+        assertEquals(statusCode, ch.statusCode());
     }
 
     @Test
-    public void lombokBuilderAndAccessorsWork() {
+    public void recordIsImmutable() {
         Instant now = Instant.now();
-        CallHistory ch = CallHistory.builder()
-                .id(42L)
-                .timestamp(now)
-                .endpoint("/api/test")
-                .parameters("{\"a\":1}")
-                .response("{\"ok\":true}")
-                .statusCode(200)
-                .build();
+        CallHistory ch1 = new CallHistory(1L, now, "/api/test", "{}", "{}", 200);
+        CallHistory ch2 = new CallHistory(1L, now, "/api/test", "{}", "{}", 200);
 
-        assertEquals(Long.valueOf(42L), ch.getId());
-        assertEquals(now, ch.getTimestamp());
-        assertEquals("/api/test", ch.getEndpoint());
-        assertEquals("{\"a\":1}", ch.getParameters());
-        assertEquals("{\"ok\":true}", ch.getResponse());
-        assertEquals(Integer.valueOf(200), ch.getStatusCode());
+        assertEquals(ch1, ch2);
+        assertEquals(ch1.hashCode(), ch2.hashCode());
     }
 }

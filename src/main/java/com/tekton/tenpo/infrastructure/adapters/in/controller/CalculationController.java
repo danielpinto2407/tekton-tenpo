@@ -10,7 +10,7 @@ import com.tekton.tenpo.application.port.in.CalculatePercentagePort;
 import com.tekton.tenpo.domain.model.CalculationPercentageResult;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationRequest;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CalculationResponse;
-import com.tekton.tenpo.infrastructure.adapters.in.controller.mapper.CalculationResponseMapper;
+import com.tekton.tenpo.infrastructure.adapters.out.persistence.mapper.CalculationResponseMapper;
 import com.tekton.tenpo.infrastructure.constants.ApiConstants;
 
 import io.swagger.v3.oas.annotations.Operation;

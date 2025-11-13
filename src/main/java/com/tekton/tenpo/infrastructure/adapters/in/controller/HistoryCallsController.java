@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.tekton.tenpo.application.port.in.GetAllHistoryCallsPort;
-import com.tekton.tenpo.application.usecase.GetAllHistoryCallsUseCase;
 import com.tekton.tenpo.infrastructure.adapters.in.controller.dto.CallHistoryDto;
 
 import lombok.RequiredArgsConstructor;

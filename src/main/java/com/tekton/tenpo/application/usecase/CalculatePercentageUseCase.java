@@ -7,7 +7,9 @@ import com.tekton.tenpo.application.port.out.ExternalPercentagePort;
 import com.tekton.tenpo.domain.model.CalculationPercentageResult;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CalculatePercentageUseCase implements CalculatePercentagePort {
@@ -17,6 +19,7 @@ public class CalculatePercentageUseCase implements CalculatePercentagePort {
     @Override
     public CalculationPercentageResult calculate(double num1, double num2) {
         double percentage = percentagePort.getPercentage();
+        log.info("Porcentaje obtenido: {}", percentage);
         return CalculationPercentageResult.of(num1, num2, percentage);
     }
 }
