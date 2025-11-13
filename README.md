@@ -969,7 +969,7 @@ Para ver la cobertura exacta:
 
 ## 📧 Contacto
 
-Para preguntas o sugerencias, contactar a: [tu-email@example.com]
+Para preguntas o sugerencias, contactar a: [wdpinto@utp.edu.co]
 
 ---
 

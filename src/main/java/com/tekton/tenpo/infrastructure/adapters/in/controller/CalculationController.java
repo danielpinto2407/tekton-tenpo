@@ -31,16 +31,31 @@ public class CalculationController {
     private final CalculationResponseMapper responseMapper;
 
     @Operation(
-        summary = "Calcula la suma de los dos numeros y les aplica el porcentaje obtenido de la api externa",
-        description = "Recibe dos números, los suma y les aplica un porcentaje obtenido de un servicio externo.",
+        summary = "Calcula la suma de dos números con porcentaje dinámico",
+        description = "Suma dos números positivos y aplica un porcentaje obtenido de CSRNG.net. "
+            + "Usa Circuit Breaker con fallback a caché si el servicio externo falla. "
+            + "Registra automáticamente la llamada en el historial de forma asíncrona.",
         responses = {
             @ApiResponse(
                 responseCode = "200",
-                description = "Calculo completado exitosamente",
+                description = "Cálculo exitoso: (num1 + num2) + ((num1 + num2) * percentage / 100)",
                 content = @Content(schema = @Schema(implementation = CalculationResponse.class))
             ),
-            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+            @ApiResponse(
+                responseCode = "422",
+                description = "Validación fallida: números deben ser positivos",
+                content = @Content
+            ),
+            @ApiResponse(
+                responseCode = "502",
+                description = "Servicio externo no disponible: usa fallback de caché",
+                content = @Content
+            ),
+            @ApiResponse(
+                responseCode = "500",
+                description = "Error inesperado en la aplicación",
+                content = @Content
+            )
         }
     )
     @PostMapping
