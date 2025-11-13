@@ -1,28 +1,62 @@
 package com.tekton.tenpo.application.usecase;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 import com.tekton.tenpo.application.port.out.CallHistoryRepositoryPort;
 import com.tekton.tenpo.domain.model.CallHistory;
-import com.tekton.tenpo.domain.model.CreateCallHistoryInterceptor;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
+
+@ExtendWith(MockitoExtension.class)
 class SaveCallUseCaseTest {
 
+    @Mock
+    private CallHistoryRepositoryPort callHistoryRepositoryPort;
+
+    @InjectMocks
+    private SaveCallUseCase saveCallUseCase;
+
     @Test
-    void saveCallHistory_delegatesToRepository_andReturnsCallHistory() {
-        CallHistoryRepositoryPort repo = Mockito.mock(CallHistoryRepositoryPort.class);
+    void save_delegatesToRepository_andReturnsCallHistory() {
+        // Arrange
+        var now = Instant.now();
+        var input = new CallHistory(
+                null,
+                now,
+                "/api/calculate",
+                "{\"a\":1,\"b\":2}",
+                "{\"result\":3}",
+                200
+        );
 
-        SaveCallUseCase useCase = new SaveCallUseCase(repo);
+        doNothing().when(callHistoryRepositoryPort).save(any());
 
-        CreateCallHistoryInterceptor request = new CreateCallHistoryInterceptor("/x", "{}", "resp", 200);
-        CallHistory expected = request.toEntity();
+        // Act
+        var result = saveCallUseCase.save(input);
 
-        CallHistory saved = useCase.saveCallHistory(request);
+        // Assert
+        assertNotNull(result);
+        assertEquals("/api/calculate", result.endpoint());
+        assertEquals("{\"a\":1,\"b\":2}", result.parameters());
+        assertEquals("{\"result\":3}", result.response());
+        assertEquals(200, result.statusCode());
+        assertEquals(now, result.timestamp());
 
-        verify(repo).save(expected);
-        assertSame(CallHistory.class, saved.getClass());
+        ArgumentCaptor<CallHistory> captor = ArgumentCaptor.forClass(CallHistory.class);
+        verify(callHistoryRepositoryPort).save(captor.capture());
+        
+        var captured = captor.getValue();
+        assertEquals(input.endpoint(), captured.endpoint());
+        assertEquals(input.parameters(), captured.parameters());
+        assertEquals(input.response(), captured.response());
+        assertEquals(input.statusCode(), captured.statusCode());
     }
 }
